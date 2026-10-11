@@ -1,0 +1,29 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET / ASP.NET Core
+bin/
+obj/
+*.user
+*.userprefs
+appsettings.Development.json
+appsettings.Production.json
+
+# Node / Vue
+node_modules/
+dist/
+dist-ssr/
+*.local
+.npm/
+
+# Database / logs
+*.log
+*.sqlite
+*.db
