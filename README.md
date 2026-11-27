@@ -43,6 +43,29 @@ npm run dev
 
 ---
 
+## Запуск серверного приложения (Backend)
+
+Для запуска серверной части требуется установленный **.NET 8 SDK**.
+
+```bash
+cd backend
+dotnet restore
+dotnet run
+```
+
+Основные адреса в режиме `Development`:
+- API: `http://localhost:5000`
+- Swagger: `http://localhost:5000/swagger` (или `http://localhost:5000/swagger/index.html`)
+- Проверка живости процесса: `GET http://localhost:5000/health` (`200`, `ok`)
+- Сведения о приложении и среде: `GET http://localhost:5000/info`
+
+**Ограничения текущего этапа (ЛР7):**
+- данные заявок (обращений) пока в памяти, после перезапуска пропадут;
+- `/health` проверяет только доступность процесса (`liveness`), а не создание заявки;
+- настоящее создание появится в ЛР8.
+
+---
+
 ## Структура репозитория и документации
 
 ```text
@@ -61,7 +84,22 @@ npm run dev
 │       ├── lab-03.md              # [ЛР3] Отчёт по лабораторной работе №3 и чеклист семантики
 │       ├── lab-04.md              # [ЛР4] Отчёт по лабораторной работе №4 (компоненты и маршруты)
 │       ├── lab-05.md              # [ЛР5] Отчёт по лабораторной работе №5 (успех, отказ, F5)
-│       └── lab-06.md              # [ЛР6] Отчёт по лабораторной работе №6 (API, mock и 3 отказа)
+│       ├── lab-06.md              # [ЛР6] Отчёт по лабораторной работе №6 (API, mock и 3 отказа)
+│       └── lab-07.md              # [ЛР7] Отчёт по лабораторной работе №7 (каркас Web API и DI)
+├── backend/                       # [ЛР7] Серверный каркас на ASP.NET Core 8 Web API (порт 5000)
+│   ├── backend.csproj
+│   ├── Program.cs                 # DI, Swagger, /health, /info
+│   ├── appsettings.json
+│   ├── appsettings.Development.json
+│   ├── Properties/
+│   │   └── launchSettings.json    # Профиль http://localhost:5000
+│   ├── Controllers/
+│   │   └── AppealsController.cs   # Контроллер-заготовка (внедряет IAppealService)
+│   ├── Services/
+│   │   ├── IAppealService.cs      # Интерфейс сервиса
+│   │   └── AppealService.cs       # Реализация-заготовка
+│   ├── Models/                    # Модели запросов и ответов (ЛР8+)
+│   └── Data/                      # Доступ к данным PostgreSQL (ЛР9–ЛР10)
 └── frontend/                      # [ЛР3–ЛР6] Клиентский SPA на Vue 3 + Vite + vue-router (JS)
     ├── .env.example               # Пример конфигурации VITE_API_BASE_URL=http://localhost:5000
     ├── index.html
@@ -98,8 +136,9 @@ npm run dev
 | **ЛР 3** | Vue: каркас и три экрана | **Готово к сдаче** | [`frontend/`](frontend/), [`lab-03.md`](docs/reports/lab-03.md) | [`lr3`](https://github.com/milkaartem/ris-web-labs/tree/lr3) (`75a2280`) |
 | **ЛР 4** | Vue: компоненты и маршруты | **Готово к сдаче** | [`frontend/src/`](frontend/src/), [`lab-04.md`](docs/reports/lab-04.md) | [`lr4`](https://github.com/milkaartem/ris-web-labs/tree/lr4) (`c0c70c0`) |
 | **ЛР 5** | Vue: форма и список в памяти | **Готово к сдаче** | [`appealsStore.js`](frontend/src/appealsStore.js), [`AppealNew.vue`](frontend/src/pages/AppealNew.vue), [`lab-05.md`](docs/reports/lab-05.md) | [`lr5`](https://github.com/milkaartem/ris-web-labs/tree/lr5) (`d620e2f`) |
-| **ЛР 6** | Vue: клиент API и mock | **Готово к сдаче** | [`api/appeals.js`](frontend/src/api/appeals.js), [`api/mockAppeals.js`](frontend/src/api/mockAppeals.js), [`lab-06.md`](docs/reports/lab-06.md) | [`lr6`](https://github.com/milkaartem/ris-web-labs/tree/lr6) (`main`) |
+| **ЛР 6** | Vue: клиент API и mock | **Готово к сдаче** | [`api/appeals.js`](frontend/src/api/appeals.js), [`api/mockAppeals.js`](frontend/src/api/mockAppeals.js), [`lab-06.md`](docs/reports/lab-06.md) | [`lr6`](https://github.com/milkaartem/ris-web-labs/tree/lr6) (`21d4e08`) |
+| **ЛР 7** | Каркас Web API (ASP.NET Core) | **Готово к сдаче** | [`backend/`](backend/), [`lab-07.md`](docs/reports/lab-07.md) | [`lr7`](https://github.com/milkaartem/ris-web-labs/tree/lr7) (`main`) |
 
-> **Примечание для проверки предыдущих работ:** исходный каркас ЛР3 (`v-if` в одном `App.vue`) зафиксирован на теге [`lr3`](https://github.com/milkaartem/ris-web-labs/tree/lr3) (`75a2280`), версия ЛР4 с роутером — на теге [`lr4`](https://github.com/milkaartem/ris-web-labs/tree/lr4) (`c0c70c0`), версия ЛР5 с локальной записью в память — на теге [`lr5`](https://github.com/milkaartem/ris-web-labs/tree/lr5) (`d620e2f`). В актуальной ветке `main` выполнена 6 лабораторная работа.
+> **Примечание для проверки предыдущих работ:** исходный каркас ЛР3 (`v-if` в одном `App.vue`) зафиксирован на теге [`lr3`](https://github.com/milkaartem/ris-web-labs/tree/lr3) (`75a2280`), версия ЛР4 с роутером — на теге [`lr4`](https://github.com/milkaartem/ris-web-labs/tree/lr4) (`c0c70c0`), версия ЛР5 с локальной записью в память — на теге [`lr5`](https://github.com/milkaartem/ris-web-labs/tree/lr5) (`d620e2f`), клиент API с mock (ЛР6) — на теге [`lr6`](https://github.com/milkaartem/ris-web-labs/tree/lr6) (`21d4e08`). В актуальной ветке `main` выполнена 7 лабораторная работа.
 
-Серверная часть (`backend/`) и база данных (`db/`) будут добавлены в следующих лабораторных работах семестра.
+Модуль базы данных (`db/`) и подключение реального хранения в PostgreSQL будут добавлены в следующих лабораторных работах семестра.
