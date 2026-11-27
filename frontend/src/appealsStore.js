@@ -34,3 +34,19 @@ export const items = ref([
     status: 'Cancelled',
   },
 ])
+
+let nextId = 5
+
+export function addItem({ title, serviceTypeId, description }) {
+  const id = nextId++
+  const newItem = {
+    id,
+    number: `TMP-${id}`,
+    title,
+    serviceTypeId,
+    description,
+    status: 'New',
+  }
+  items.value.push(newItem)
+  return newItem
+}

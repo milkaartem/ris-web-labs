@@ -1,17 +1,72 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { addItem } from '../appealsStore.js'
 
-const newForm = ref({
+const router = useRouter()
+
+const form = ref({
+  title: '',
+  serviceTypeId: 0,
+  description: '',
+})
+
+const errors = ref({
   title: '',
   serviceTypeId: '',
   description: '',
 })
 
-const notice = ref('')
+function onCreate() {
+  errors.value = {
+    title: '',
+    serviceTypeId: '',
+    description: '',
+  }
 
-function handleCreateSubmit() {
-  notice.value =
-    'Заготовка формы создания: отправка данных через POST /api/appeals будет подключена в следующих лабораторных.'
+  const title = form.value.title.trim()
+  const serviceTypeId = form.value.serviceTypeId
+  const description = form.value.description.trim()
+
+  let hasError = false
+
+  if (title.length < 5 || title.length > 80) {
+    errors.value.title = 'Тема: от 5 до 80 символов'
+    hasError = true
+  }
+
+  if (!Number.isInteger(serviceTypeId) || serviceTypeId <= 0) {
+    errors.value.serviceTypeId = 'Укажите целое число больше нуля'
+    hasError = true
+  }
+
+  if (description.length < 10 || description.length > 500) {
+    errors.value.description = 'Описание: от 10 до 500 символов'
+    hasError = true
+  }
+
+  if (hasError) {
+    return
+  }
+
+  addItem({
+    title,
+    serviceTypeId,
+    description,
+  })
+
+  errors.value = {
+    title: '',
+    serviceTypeId: '',
+    description: '',
+  }
+  form.value = {
+    title: '',
+    serviceTypeId: 0,
+    description: '',
+  }
+
+  router.push('/')
 }
 </script>
 
@@ -22,47 +77,51 @@ function handleCreateSubmit() {
       Заполните три обязательных поля, соответствующие критерию 1 и контракту API.
     </p>
 
-    <form class="app-form" @submit.prevent="handleCreateSubmit">
+    <form class="app-form" novalidate @submit.prevent="onCreate">
       <div class="field">
         <label for="title">Тема, 5–80 символов</label>
         <input
           id="title"
-          v-model="newForm.title"
+          v-model="form.title"
           name="title"
           type="text"
           placeholder="Например: Выдача справки об обучении за 3 семестр"
           autofocus
         />
+        <p v-if="errors.title" class="field-error">{{ errors.title }}</p>
       </div>
 
       <div class="field">
         <label for="serviceTypeId">Номер категории услуги (serviceTypeId)</label>
         <input
           id="serviceTypeId"
-          v-model="newForm.serviceTypeId"
+          v-model.number="form.serviceTypeId"
           name="serviceTypeId"
           type="number"
-          min="1"
           placeholder="1 — справка, 2 — перевод, 3 — стипендия, 4 — документы"
         />
+        <p v-if="errors.serviceTypeId" class="field-error">
+          {{ errors.serviceTypeId }}
+        </p>
       </div>
 
       <div class="field">
         <label for="description">Описание, 10–500 символов</label>
         <textarea
           id="description"
-          v-model="newForm.description"
+          v-model="form.description"
           name="description"
           rows="4"
           placeholder="Подробно опишите суть обращения и цель запроса..."
         ></textarea>
+        <p v-if="errors.description" class="field-error">
+          {{ errors.description }}
+        </p>
       </div>
 
       <div class="form-actions">
         <button type="submit" class="btn-primary">Создать</button>
       </div>
-
-      <p v-if="notice" class="notice">{{ notice }}</p>
     </form>
   </main>
 </template>
@@ -122,6 +181,13 @@ h1 {
   border-color: var(--primary);
 }
 
+.field-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
 .form-actions {
   margin-top: 4px;
 }
@@ -138,15 +204,5 @@ h1 {
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
-}
-
-.notice {
-  margin: 0;
-  padding: 10px 12px;
-  border-radius: 6px;
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-  color: #1e3a8a;
-  font-size: 0.9rem;
 }
 </style>
