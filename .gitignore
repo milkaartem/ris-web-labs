@@ -22,6 +22,9 @@ dist/
 dist-ssr/
 *.local
 .npm/
+.env
+.env.*
+!.env.example
 
 # Database / logs
 *.log

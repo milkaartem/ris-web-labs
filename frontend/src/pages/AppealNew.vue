@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { addItem } from '../appealsStore.js'
+import { createAppeal } from '../api/appeals.js'
 
 const router = useRouter()
 
@@ -17,12 +17,20 @@ const errors = ref({
   description: '',
 })
 
-function onCreate() {
+const apiError = ref('')
+const isSubmitting = ref(false)
+
+async function onCreate() {
+  if (isSubmitting.value) {
+    return
+  }
+
   errors.value = {
     title: '',
     serviceTypeId: '',
     description: '',
   }
+  apiError.value = ''
 
   const title = form.value.title.trim()
   const serviceTypeId = form.value.serviceTypeId
@@ -49,24 +57,33 @@ function onCreate() {
     return
   }
 
-  addItem({
-    title,
-    serviceTypeId,
-    description,
-  })
+  isSubmitting.value = true
 
-  errors.value = {
-    title: '',
-    serviceTypeId: '',
-    description: '',
-  }
-  form.value = {
-    title: '',
-    serviceTypeId: 0,
-    description: '',
-  }
+  try {
+    await createAppeal({
+      title,
+      serviceTypeId,
+      description,
+    })
 
-  router.push('/')
+    form.value = {
+      title: '',
+      serviceTypeId: 0,
+      description: '',
+    }
+
+    router.push('/')
+  } catch (err) {
+    apiError.value = err.message || 'Не удалось создать обращение'
+    const serverErrors = err.data?.errors
+    if (serverErrors) {
+      if (serverErrors.title) errors.value.title = serverErrors.title
+      if (serverErrors.serviceTypeId) errors.value.serviceTypeId = serverErrors.serviceTypeId
+      if (serverErrors.description) errors.value.description = serverErrors.description
+    }
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -74,7 +91,7 @@ function onCreate() {
   <main class="card">
     <h1>Создать обращение</h1>
     <p class="lead">
-      Заполните три обязательных поля, соответствующие критерию 1 и контракту API.
+      Заполните три обязательных поля. Запрос отправляется через <code>createAppeal</code>; номер и статус приходят из ответа.
     </p>
 
     <form class="app-form" novalidate @submit.prevent="onCreate">
@@ -119,8 +136,12 @@ function onCreate() {
         </p>
       </div>
 
+      <p v-if="apiError" class="api-error" role="alert">{{ apiError }}</p>
+
       <div class="form-actions">
-        <button type="submit" class="btn-primary">Создать</button>
+        <button type="submit" class="btn-primary" :disabled="isSubmitting">
+          {{ isSubmitting ? 'Создаём…' : 'Создать' }}
+        </button>
       </div>
     </form>
   </main>
@@ -188,6 +209,17 @@ h1 {
   font-weight: 500;
 }
 
+.api-error {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  background-color: #fef2f2;
+  color: #991b1b;
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+
 .form-actions {
   margin-top: 4px;
 }
@@ -202,7 +234,12 @@ h1 {
   cursor: pointer;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   background-color: var(--primary-hover);
+}
+
+.btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 </style>
