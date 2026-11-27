@@ -22,30 +22,57 @@
 
 ---
 
+## Запуск клиентского приложения (Frontend)
+
+Для запуска клиентской части требуется установленный **Node.js (LTS)**.
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+После запуска открыть адрес Vite, обычно `http://localhost:5173`.
+
+---
+
 ## Структура репозитория и документации
 
 ```text
 .
-├── README.md                      # Данное описание проекта
-├── .gitignore                     # Исключения системных и сборочных файлов
-└── docs/
-    ├── project-proposal.md        # [ЛР1] Заявка на тему и самопроверка по 12 критериям
-    ├── lab-01-requirements.md     # [ЛР1] Техническое задание (ТЗ) на разработку системы
-    ├── architecture.md            # [ЛР2] Трёхузловая архитектурная схема и описание взаимодействия
-    ├── data-model.md              # [ЛР2] ER-диаграмма, словарь терминов, ключи (PK, FK) и проверка 3НФ
-    ├── api-contract.md            # [ЛР2] Спецификация REST API (2 независимых PATCH, JSON-примеры)
-    ├── requirements-matrix.md     # [ЛР2] Трассировочная матрица критериев ЛР1 к модели и API
-    └── reports/
-        └── lab-02.md              # [ЛР2] Отчёт по лабораторной работе №2 и ответы на вопросы защиты
+├── README.md                      # Данное описание проекта и команды запуска
+├── .gitignore                     # Исключения (node_modules/, dist/, .DS_Store и др.)
+├── docs/
+│   ├── project-proposal.md        # [ЛР1] Заявка на тему и самопроверка по 12 критериям
+│   ├── lab-01-requirements.md     # [ЛР1] Техническое задание (ТЗ) на разработку системы
+│   ├── architecture.md            # [ЛР2] Трёхузловая архитектурная схема и описание взаимодействия
+│   ├── data-model.md              # [ЛР2] ER-диаграмма, словарь терминов, ключи (PK, FK) и проверка 3НФ
+│   ├── api-contract.md            # [ЛР2] Спецификация REST API (2 независимых PATCH, JSON-примеры)
+│   ├── requirements-matrix.md     # [ЛР2] Трассировочная матрица критериев ЛР1 к модели и API
+│   └── reports/
+│       ├── lab-02.md              # [ЛР2] Отчёт по лабораторной работе №2 и ответы на вопросы защиты
+│       └── lab-03.md              # [ЛР3] Отчёт по лабораторной работе №3 и чеклист семантики
+└── frontend/                      # [ЛР3] Клиентский SPA-каркас на Vue 3 + Vite (JavaScript)
+    ├── index.html
+    ├── package.json
+    ├── package-lock.json
+    ├── vite.config.js
+    ├── public/
+    └── src/
+        ├── main.js
+        ├── style.css
+        ├── App.vue
+        └── assets/
 ```
 
 ---
 
 ## Статус выполнения лабораторных работ
 
-| Лабораторная работа | Название | Статус | Документы |
-|:-------------------:|:---------|:------:|:----------|
+| Лабораторная работа | Название | Статус | Документы / Код |
+|:-------------------:|:---------|:------:|:----------------|
 | **ЛР 1** | Анализ, требования и выбор темы | **Принято** | [`project-proposal.md`](docs/project-proposal.md), [`lab-01-requirements.md`](docs/lab-01-requirements.md) |
-| **ЛР 2** | Архитектура и модель данных | **Готово к сдаче** | [`architecture.md`](docs/architecture.md), [`data-model.md`](docs/data-model.md), [`api-contract.md`](docs/api-contract.md), [`requirements-matrix.md`](docs/requirements-matrix.md), [`lab-02.md`](docs/reports/lab-02.md) |
+| **ЛР 2** | Архитектура и модель данных | **Принято** | [`architecture.md`](docs/architecture.md), [`data-model.md`](docs/data-model.md), [`api-contract.md`](docs/api-contract.md), [`requirements-matrix.md`](docs/requirements-matrix.md), [`lab-02.md`](docs/reports/lab-02.md) |
+| **ЛР 3** | Vue: каркас и три экрана | **Готово к сдаче** | [`frontend/`](frontend/), [`lab-03.md`](docs/reports/lab-03.md) |
 
-Кодовые модули (`frontend/`, `backend/`, `db/`) будут добавляться в данный репозиторий по мере выполнения лабораторных работ.
+Серверная часть (`backend/`) и база данных (`db/`) будут добавлены в следующих лабораторных работах семестра.
