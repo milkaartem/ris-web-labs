@@ -1,0 +1,147 @@
+{
+  "info": {
+    "name": "КГЭУ РИС — обращения в деканат (коллекция ЛР8)",
+    "description": "Импортировать в Postman или Insomnia. Базовый URL: http://localhost:5000. Проверяет сценарии 200, 201, 400, 404, 409 и безопасный 500.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "resource",
+      "value": "appeals"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 GET list — 200 (включая [])",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/{{resource}}"
+      }
+    },
+    {
+      "name": "02 POST create appeal — 201",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-User-Id", "value": "1" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Выдача справки об обучении за 3 семестр\",\n  \"serviceTypeId\": 1,\n  \"description\": \"Справка необходима для предоставления в пенсионный фонд.\"\n}"
+        },
+        "url": "{{baseUrl}}/api/{{resource}}"
+      }
+    },
+    {
+      "name": "03 POST create short title — 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-User-Id", "value": "1" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Абв\",\n  \"serviceTypeId\": 1,\n  \"description\": \"Справка необходима для предоставления в пенсионный фонд.\"\n}"
+        },
+        "url": "{{baseUrl}}/api/{{resource}}"
+      }
+    },
+    {
+      "name": "04 GET by missing id — 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/{{resource}}/999999"
+      }
+    },
+    {
+      "name": "05 PATCH status without assignee — 409",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-User-Id", "value": "2" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"InProgress\"\n}"
+        },
+        "url": "{{baseUrl}}/api/{{resource}}/1/status"
+      }
+    },
+    {
+      "name": "06 PATCH assign user — 200",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assigneeUserId\": 2\n}"
+        },
+        "url": "{{baseUrl}}/api/{{resource}}/1/assignee"
+      }
+    },
+    {
+      "name": "07 PATCH status InProgress (wrong user X-User-Id=99) — 409",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-User-Id", "value": "99" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"InProgress\"\n}"
+        },
+        "url": "{{baseUrl}}/api/{{resource}}/1/status"
+      }
+    },
+    {
+      "name": "08 PATCH status InProgress (assignee X-User-Id=2) — 200",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-User-Id", "value": "2" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"InProgress\"\n}"
+        },
+        "url": "{{baseUrl}}/api/{{resource}}/1/status"
+      }
+    },
+    {
+      "name": "09 GET by id — 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/{{resource}}/1"
+      }
+    },
+    {
+      "name": "10 POST simulate unexpected error (Development) — 500",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-Simulate-Error", "value": "true" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Тест ошибки 500 на сервере\",\n  \"serviceTypeId\": 2,\n  \"description\": \"Проверка безопасного ответа ProblemDetails без стека.\"\n}"
+        },
+        "url": "{{baseUrl}}/api/{{resource}}"
+      }
+    }
+  ]
+}

@@ -24,8 +24,8 @@ app.MapGet("/info", (IWebHostEnvironment env) => Results.Ok(new
     app = "ElectronicDeaneryApi",
     title = "Электронная приёмная деканата ИЦТЭ КГЭУ",
     environment = env.EnvironmentName,
-    version = "0.1.0-lab07",
-    note = "ЛР7: каркас Web API (создание обращений появится в ЛР8)"
+    version = "0.2.0-lab08",
+    note = "ЛР8: REST-операции обращений в памяти"
 }));
 
 app.MapControllers();

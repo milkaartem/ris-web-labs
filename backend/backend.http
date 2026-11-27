@@ -5,10 +5,53 @@ Accept: application/json
 
 ###
 
-GET {{backend_HostAddress}}/info
+GET {{backend_HostAddress}}/api/appeals
 Accept: application/json
 
 ###
 
-GET {{backend_HostAddress}}/api/appeals
+POST {{backend_HostAddress}}/api/appeals
+Content-Type: application/json
+X-User-Id: 1
+
+{
+  "title": "Выдача справки об обучении за 3 семестр",
+  "serviceTypeId": 1,
+  "description": "Справка необходима для предоставления в пенсионный фонд."
+}
+
+###
+
+POST {{backend_HostAddress}}/api/appeals
+Content-Type: application/json
+X-User-Id: 1
+
+{
+  "title": "Абв",
+  "serviceTypeId": 1,
+  "description": "Справка необходима для предоставления в пенсионный фонд."
+}
+
+###
+
+GET {{backend_HostAddress}}/api/appeals/999999
 Accept: application/json
+
+###
+
+PATCH {{backend_HostAddress}}/api/appeals/1/assignee
+Content-Type: application/json
+
+{
+  "assigneeUserId": 2
+}
+
+###
+
+PATCH {{backend_HostAddress}}/api/appeals/1/status
+Content-Type: application/json
+X-User-Id: 2
+
+{
+  "status": "InProgress"
+}
