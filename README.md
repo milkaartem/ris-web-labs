@@ -73,6 +73,28 @@ dotnet run
 
 ---
 
+## База данных (PostgreSQL)
+
+Для работы со схемой и учебными данными требуется установленный **PostgreSQL** (`psql` или pgAdmin).  
+
+```bash
+# Создание отдельной учебной базы данных
+createdb -U postgres course_appeals
+
+# Создание таблиц, ограничений и индексов
+psql -U postgres -d course_appeals -f db/schema.sql
+
+# Заполнение учебными данными (4 категории, 4 пользователя, все 4 статуса)
+psql -U postgres -d course_appeals -f db/seed.sql
+
+# Выполнение обязательных выборок (фильтр, JOIN, GROUP BY)
+psql -U postgres -d course_appeals -f db/queries.sql
+```
+
+Для повторного прогона схемы файл `db/schema.sql` в начале пересоздаёт только учебные таблицы.
+
+---
+
 ## Структура репозитория и документации
 
 ```text
@@ -95,7 +117,12 @@ dotnet run
 │       ├── lab-05.md              # [ЛР5] Отчёт по лабораторной работе №5 (успех, отказ, F5)
 │       ├── lab-06.md              # [ЛР6] Отчёт по лабораторной работе №6 (API, mock и 3 отказа)
 │       ├── lab-07.md              # [ЛР7] Отчёт по лабораторной работе №7 (каркас Web API и DI)
-│       └── lab-08.md              # [ЛР8] Отчёт по лабораторной работе №8 (REST, валидация и лог)
+│       ├── lab-08.md              # [ЛР8] Отчёт по лабораторной работе №8 (REST, валидация и лог)
+│       └── lab-09.md              # [ЛР9] Отчёт по лабораторной работе №9 (PostgreSQL и SQL)
+├── db/                            # [ЛР9] SQL-схема, тестовые данные и выборки для PostgreSQL
+│   ├── schema.sql                 # Таблицы service_types, users, appeals; PK, FK, CHECK, индексы
+│   ├── seed.sql                   # Учебные данные (все 4 статуса: New, InProgress, Closed, Cancelled)
+│   └── queries.sql                # Фильтрация, сортировка, JOIN, GROUP BY и пример проверки CHECK
 ├── backend/                       # [ЛР7–ЛР8] Сервер на ASP.NET Core 8 Web API (порт 5000)
 │   ├── backend.csproj
 │   ├── Program.cs                 # DI, Swagger, /health, /info
@@ -154,6 +181,7 @@ dotnet run
 | **ЛР 5** | Vue: форма и список в памяти | **Готово к сдаче** | [`appealsStore.js`](frontend/src/appealsStore.js), [`AppealNew.vue`](frontend/src/pages/AppealNew.vue), [`lab-05.md`](docs/reports/lab-05.md) | [`lr5`](https://github.com/milkaartem/ris-web-labs/tree/lr5) (`d620e2f`) |
 | **ЛР 6** | Vue: клиент API и mock | **Готово к сдаче** | [`api/appeals.js`](frontend/src/api/appeals.js), [`api/mockAppeals.js`](frontend/src/api/mockAppeals.js), [`lab-06.md`](docs/reports/lab-06.md) | [`lr6`](https://github.com/milkaartem/ris-web-labs/tree/lr6) (`21d4e08`) |
 | **ЛР 7** | Каркас Web API (ASP.NET Core) | **Готово к сдаче** | [`backend/`](backend/), [`lab-07.md`](docs/reports/lab-07.md) | [`lr7`](https://github.com/milkaartem/ris-web-labs/tree/lr7) (`dc26a3a`) |
-| **ЛР 8** | REST: заявки и валидация | **Готово к сдаче** | [`AppealsController.cs`](backend/Controllers/AppealsController.cs), [`appeals.postman_collection.json`](docs/api-collection/appeals.postman_collection.json), [`lab-08.md`](docs/reports/lab-08.md) | [`lr8`](https://github.com/milkaartem/ris-web-labs/tree/lr8) (`main`) |
+| **ЛР 8** | REST: заявки и валидация | **Готово к сдаче** | [`AppealsController.cs`](backend/Controllers/AppealsController.cs), [`appeals.postman_collection.json`](docs/api-collection/appeals.postman_collection.json), [`lab-08.md`](docs/reports/lab-08.md) | [`lr8`](https://github.com/milkaartem/ris-web-labs/tree/lr8) (`109a3bd`) |
+| **ЛР 9** | PostgreSQL и SQL | **Готово к сдаче** | [`db/`](db/), [`lab-09.md`](docs/reports/lab-09.md) | [`lr9`](https://github.com/milkaartem/ris-web-labs/tree/lr9) (`main`) |
 
-> **Примечание для проверки предыдущих работ:** исходный каркас ЛР3 (`v-if` в одном `App.vue`) зафиксирован на теге [`lr3`](https://github.com/milkaartem/ris-web-labs/tree/lr3) (`75a2280`), версия ЛР4 с роутером — на теге [`lr4`](https://github.com/milkaartem/ris-web-labs/tree/lr4) (`c0c70c0`), версия ЛР5 с локальной записью в память — на теге [`lr5`](https://github.com/milkaartem/ris-web-labs/tree/lr5) (`d620e2f`), клиент API с mock (ЛР6) — на теге [`lr6`](https://github.com/milkaartem/ris-web-labs/tree/lr6) (`21d4e08`), каркас Web API (ЛР7) — на теге [`lr7`](https://github.com/milkaartem/ris-web-labs/tree/lr7) (`dc26a3a`). В актуальной ветке `main` выполнена 8 лабораторная работа.
+> **Примечание для проверки предыдущих работ:** исходный каркас ЛР3 (`v-if` в одном `App.vue`) зафиксирован на теге [`lr3`](https://github.com/milkaartem/ris-web-labs/tree/lr3) (`75a2280`), версия ЛР4 с роутером — на теге [`lr4`](https://github.com/milkaartem/ris-web-labs/tree/lr4) (`c0c70c0`), версия ЛР5 с локальной записью в память — на теге [`lr5`](https://github.com/milkaartem/ris-web-labs/tree/lr5) (`d620e2f`), клиент API с mock (ЛР6) — на теге [`lr6`](https://github.com/milkaartem/ris-web-labs/tree/lr6) (`21d4e08`), каркас Web API (ЛР7) — на теге [`lr7`](https://github.com/milkaartem/ris-web-labs/tree/lr7) (`dc26a3a`), REST-операции в памяти (ЛР8) — на теге [`lr8`](https://github.com/milkaartem/ris-web-labs/tree/lr8) (`109a3bd`). В актуальной ветке `main` выполнена 9 лабораторная работа.
